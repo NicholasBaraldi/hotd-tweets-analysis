@@ -4,6 +4,8 @@ from sqlalchemy import create_engine
 from st_aggrid import AgGrid, GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
 import numpy as np
+from datetime import date
+from PIL import Image
 
 
 
@@ -16,18 +18,6 @@ def load_data():
     df = pd.read_sql_query(query, engine)
     # data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
     return df
-
-
-
-
-
-
-# Some number in the range 0-23
-# hour_to_filter = st.slider('hour', 0, 23, 17)
-# filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
-
-# st.subheader('Map of all pickups at %s:00' % hour_to_filter)
-# st.map(filtered_data)
 
 
 def aggrid_interactive_table(df: pd.DataFrame):
@@ -62,6 +52,7 @@ data_load_state = st.text('Loading data...')
 data = load_data()
 df = data
 df['data'] = pd.to_datetime(data['trunc_10_minute'], format=('%Y-%m-%dT%H:%M:%S.%f'))
+df['date'] = pd.to_datetime(df['trunc_10_minute']).dt.date
 data_load_state.text("Done! (using st.cache)")
 
 
@@ -72,29 +63,35 @@ with st.sidebar:
     )
 
 if add_radio == "Data Infra":
-    st.title('Test')
+    st.title('Data Infra')
     st.subheader(
-        "Test"
+        "Documentation"
     )
+    image = Image.open('assests/house-of-the-dragon-capa.webp')
+    st.image(image, caption='House of The Dragon')
+    st.markdown("""
+        Esse projeto foi um inferno, deu quase tudo errado, mas no final deu pra aprender.
+
+
+        """)
     if st.checkbox('Show raw data'):
         st.subheader('Raw data')
         st.write(data)
 
-    selection = aggrid_interactive_table(df=df)
-
-    if selection:
-        st.write("You selected:")
-        st.json(selection["selected_rows"])
 else:
-    st.title('Test2')
+    st.title('House of Dragon Data Analysis')
+    d = st.date_input("When's your birthday", date(2022, 10, 16))
     st.subheader(
-        "Test2"
+        "Soma acumulada de tweets"
     )
     columns = ["trunc_10_minute", "csum_tweets"]
-    mask = (df['data'] >= "10/17/2022") & (df['data'] <= "10/24/2022")
+    mask = (df['date'] >= d) & (df['date'] <= d)
     filter_df = df.loc[mask]
     st.bar_chart(filter_df, x="data", y="csum_tweets", use_container_width = True)
-# st.subheader('Number of pickups by hour')
-# hist_values = np.histogram(data["trunc_10_minute"], bins=24, range=(0,24))[0]
-# st.bar_chart(hist_values)
+    st.subheader(
+        "Soma acumulada de usuários"
+    )
+    st.bar_chart(filter_df, x="data", y="csum_users", use_container_width = True)
+    
+
 
