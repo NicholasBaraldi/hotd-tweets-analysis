@@ -10,7 +10,7 @@ The next step in this flow was to model the data in a way to facilitate data con
 
 Our last step was this repo itselfm, create a nice data visualization. For that a dashboard using Streamlit was the choice, consuming data directly from wor Postgres “Data Warehouse”.
 
-## Guide 
+## Guide
 
 For running this reposity check the step by step guide [here](https://github.com/NicholasBaraldi/twitter-api-data-stack)  
 
@@ -18,3 +18,5 @@ After that just run the dashboard by typing
 ```
 streamlit run hotd_analysis.py
 ```
+
+And check the dashboard on your at localhost.
