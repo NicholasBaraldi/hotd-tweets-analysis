@@ -19,4 +19,4 @@ After that just run the dashboard by typing
 streamlit run hotd_analysis.py
 ```
 
-And check the dashboard on your at localhost.
+And check the dashboard at your localhost.
